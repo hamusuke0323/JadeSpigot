@@ -1,0 +1,156 @@
+package com.hamusuke.jadespigot.impl;
+
+import com.google.common.base.Suppliers;
+import com.hamusuke.jadespigot.JadeRegistry;
+import com.hamusuke.jadespigot.JadeSpigot;
+import com.hamusuke.jadespigot.Utils;
+import com.hamusuke.jadespigot.accessors.EntityAccessor;
+import com.hamusuke.jadespigot.network.NetworkContext;
+import com.hamusuke.jadespigot.network.packet.RequestEntityPacket;
+import com.hamusuke.jadespigot.providers.ServerDataProvider;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.World;
+import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.phys.Vec3D;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity> implements EntityAccessor {
+    private final Supplier<Entity> entity;
+
+    public EntityAccessorImpl(Builder builder) {
+        super(builder.level, builder.player, builder.serverData, builder.hit, builder.connected, builder.showDetails);
+        this.entity = builder.entity;
+    }
+
+    public static void handleRequest(RequestEntityPacket message, NetworkContext context, Consumer<NBTTagCompound> responseSender) {
+        var player = context.getPlayer();
+        context.execute(() -> {
+            var accessor = message.data().unpack(player);
+            if (accessor == null) {
+                return;
+            }
+
+            var entity = accessor.getEntity();
+            double maxDistance = MathHelper.k(player.gM() + 21);
+            if (entity == null || player.g(entity) > maxDistance) {
+                return;
+            }
+
+            List<ServerDataProvider<EntityAccessor>> providers = JadeRegistry.INSTANCE.getEntityNBTProviders(entity);
+            var tag = accessor.getServerData();
+            for (var provider : providers) {
+                try {
+                    provider.appendServerData(tag, accessor);
+                } catch (Exception e) {
+                    JadeSpigot.instance().getLogger().warning(e.toString());
+                }
+            }
+
+            tag.a("EntityId", entity.ar());
+            responseSender.accept(tag);
+        });
+    }
+
+    @Override
+    public Entity getEntity() {
+        return Utils.wrapPartEntityParent(this.getRawEntity());
+    }
+
+    @Override
+    public Entity getRawEntity() {
+        return this.entity.get();
+    }
+
+    @NotNull
+    @Override
+    public Object getTarget() {
+        return this.getEntity();
+    }
+
+    public static class Builder implements EntityAccessor.Builder {
+        public boolean showDetails;
+        private World level;
+        private Player player;
+        private NBTTagCompound serverData;
+        private boolean connected;
+        private Supplier<MovingObjectPositionEntity> hit;
+        private Supplier<Entity> entity;
+        private boolean verify;
+
+        @Override
+        public Builder level(World level) {
+            this.level = level;
+            return this;
+        }
+
+        @Override
+        public Builder player(Player player) {
+            this.player = player;
+            return this;
+        }
+
+        @Override
+        public Builder showDetails(boolean showDetails) {
+            this.showDetails = showDetails;
+            return this;
+        }
+
+        @Override
+        public Builder hit(Supplier<MovingObjectPositionEntity> hit) {
+            this.hit = hit;
+            return this;
+        }
+
+        @Override
+        public Builder entity(Supplier<Entity> entity) {
+            this.entity = entity;
+            return this;
+        }
+
+        @Override
+        public EntityAccessor build() {
+            var accessor = new EntityAccessorImpl(this);
+            if (this.verify) {
+                accessor.requireVerification();
+            }
+
+            return accessor;
+        }
+    }
+
+    public record SyncData(boolean showDetails, int id, int partIndex, Vec3D hitVec) {
+        public static final StreamCodec<RegistryFriendlyByteBuf, SyncData> STREAM_CODEC = StreamCodec.a(
+                ByteBufCodecs.b,
+                SyncData::showDetails,
+                ByteBufCodecs.h,
+                SyncData::id,
+                ByteBufCodecs.h,
+                SyncData::partIndex,
+                ByteBufCodecs.u.a(Vec3D::new, Vec3D::k),
+                SyncData::hitVec,
+                SyncData::new
+        );
+
+        public EntityAccessor unpack(EntityPlayer player) {
+            Supplier<Entity> entity = Suppliers.memoize(() -> Utils.getPartEntity(player.dV().a(this.id), this.partIndex));
+            return new EntityAccessorImpl.Builder()
+                    .level(player.dV())
+                    .player(player.getBukkitEntity().getPlayer())
+                    .showDetails(this.showDetails)
+                    .entity(entity)
+                    .hit(Suppliers.memoize(() -> new MovingObjectPositionEntity(entity.get(), this.hitVec)))
+                    .build();
+        }
+    }
+}
