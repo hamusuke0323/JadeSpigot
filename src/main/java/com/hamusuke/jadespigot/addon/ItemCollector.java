@@ -113,7 +113,7 @@ public class ItemCollector<T> {
 
         public ItemStack toStack(int count) {
             ItemStack itemStack = new ItemStack(item, count);
-            itemStack.a(components);
+            itemStack.b(components);
             return itemStack;
         }
     }
