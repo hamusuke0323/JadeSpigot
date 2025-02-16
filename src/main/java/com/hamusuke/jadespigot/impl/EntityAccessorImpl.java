@@ -29,7 +29,7 @@ public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity>
     private final Supplier<Entity> entity;
 
     public EntityAccessorImpl(Builder builder) {
-        super(builder.level, builder.player, builder.serverData, builder.hit, builder.connected, builder.showDetails);
+        super(builder.level, builder.player, null, builder.hit);
         this.entity = builder.entity;
     }
 
@@ -82,11 +82,8 @@ public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity>
         public boolean showDetails;
         private World level;
         private Player player;
-        private NBTTagCompound serverData;
-        private boolean connected;
         private Supplier<MovingObjectPositionEntity> hit;
         private Supplier<Entity> entity;
-        private boolean verify;
 
         @Override
         public Builder level(World level) {
@@ -120,12 +117,7 @@ public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity>
 
         @Override
         public EntityAccessor build() {
-            var accessor = new EntityAccessorImpl(this);
-            if (this.verify) {
-                accessor.requireVerification();
-            }
-
-            return accessor;
+            return new EntityAccessorImpl(this);
         }
     }
 

@@ -28,10 +28,6 @@ public interface Accessor<T extends MovingObjectPosition> {
 
     T getHitResult();
 
-    boolean isServerConnected();
-
-    boolean showDetails();
-
     @Nullable
     Object getTarget();
 }

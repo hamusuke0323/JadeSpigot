@@ -34,13 +34,11 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
     private final IBlockData blockState;
     @Nullable
     private final Supplier<TileEntity> blockEntity;
-    private final ItemStack fakeBlock;
 
     private BlockAccessorImpl(Builder builder) {
-        super(builder.level, builder.player, builder.serverData, Suppliers.ofInstance(builder.hit), builder.connected, builder.showDetails);
+        super(builder.level, builder.player, null, Suppliers.ofInstance(builder.hit));
         this.blockState = builder.blockState;
         this.blockEntity = builder.blockEntity;
-        this.fakeBlock = builder.fakeBlock;
     }
 
     public static void handleRequest(RequestBlockPacket message, NetworkContext context, Consumer<NBTTagCompound> responseSender) {
@@ -102,22 +100,12 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
         return this.getBlockEntity();
     }
 
-    @Override
-    public ItemStack getFakeBlock() {
-        return this.fakeBlock;
-    }
-
     public static class Builder implements BlockAccessor.Builder {
         private World level;
         private Player player;
-        private NBTTagCompound serverData;
-        private boolean connected;
-        private boolean showDetails;
         private MovingObjectPositionBlock hit;
         private IBlockData blockState = Blocks.a.m();
         private Supplier<TileEntity> blockEntity;
-        private ItemStack fakeBlock = ItemStack.j;
-        private boolean verify;
 
         @Override
         public Builder level(World level) {
@@ -133,7 +121,6 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
 
         @Override
         public Builder showDetails(boolean showDetails) {
-            this.showDetails = showDetails;
             return this;
         }
 
@@ -157,17 +144,12 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
 
         @Override
         public Builder fakeBlock(ItemStack stack) {
-            fakeBlock = stack;
             return this;
         }
 
         @Override
         public BlockAccessor build() {
-            BlockAccessorImpl accessor = new BlockAccessorImpl(this);
-            if (verify) {
-                accessor.requireVerification();
-            }
-            return accessor;
+            return new BlockAccessorImpl(this);
         }
     }
 

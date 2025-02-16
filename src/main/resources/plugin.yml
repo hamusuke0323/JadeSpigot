@@ -1,4 +1,4 @@
 name: JadeSpigot
-version: '1.0.2'
+version: '1.0.3'
 main: com.hamusuke.jadespigot.JadeSpigot
 api-version: '1.21'

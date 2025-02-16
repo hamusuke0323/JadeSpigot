@@ -20,17 +20,13 @@ public abstract class AccessorImpl<T extends MovingObjectPosition> implements Ac
     private final Player player;
     private final NBTTagCompound serverData;
     private final Supplier<T> hit;
-    private final boolean serverConnected;
-    private final boolean showDetails;
     protected boolean verify;
     private RegistryFriendlyByteBuf buffer;
 
-    public AccessorImpl(World level, Player player, NBTTagCompound serverData, Supplier<T> hit, boolean serverConnected, boolean showDetails) {
+    public AccessorImpl(World level, Player player, NBTTagCompound serverData, Supplier<T> hit) {
         this.level = level;
         this.player = player;
         this.hit = hit;
-        this.serverConnected = serverConnected;
-        this.showDetails = showDetails;
         this.serverData = serverData == null ? new NBTTagCompound() : serverData.i();
     }
 
@@ -70,16 +66,6 @@ public abstract class AccessorImpl<T extends MovingObjectPosition> implements Ac
     @Override
     public T getHitResult() {
         return this.hit.get();
-    }
-
-    @Override
-    public boolean isServerConnected() {
-        return this.serverConnected;
-    }
-
-    @Override
-    public boolean showDetails() {
-        return this.showDetails;
     }
 
     public void requireVerification() {

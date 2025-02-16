@@ -102,19 +102,6 @@ public class Utils {
         return target instanceof EntityComplexPart part ? part.a : target;
     }
 
-    public static int getPartEntityIndex(Entity entity) {
-        if (!(entity instanceof EntityComplexPart part)) {
-            return -1;
-        }
-
-        if (!(wrapPartEntityParent(entity) instanceof EntityEnderDragon parent)) {
-            return -1;
-        }
-
-        EntityComplexPart[] parts = parent.x();
-        return List.of(parts).indexOf(part);
-    }
-
     public static Entity getPartEntity(Entity parent, int index) {
         if (parent == null) {
             return null;

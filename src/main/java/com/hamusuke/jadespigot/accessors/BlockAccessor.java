@@ -20,8 +20,6 @@ public interface BlockAccessor extends Accessor<MovingObjectPositionBlock> {
 
     BlockPosition getPosition();
 
-    ItemStack getFakeBlock();
-
     interface Builder {
         Builder level(World level);
 
