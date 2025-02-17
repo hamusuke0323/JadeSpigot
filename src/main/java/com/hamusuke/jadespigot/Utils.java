@@ -1,5 +1,6 @@
 package com.hamusuke.jadespigot;
 
+import com.google.common.collect.Maps;
 import com.hamusuke.jadespigot.accessors.Accessor;
 import com.hamusuke.jadespigot.accessors.BlockAccessor;
 import com.hamusuke.jadespigot.addon.ItemCollector;
@@ -7,6 +8,8 @@ import com.hamusuke.jadespigot.addon.ItemIterator;
 import com.hamusuke.jadespigot.impl.lookup.WrappedHierarchyLookup;
 import com.hamusuke.jadespigot.view.ServerExtensionProvider;
 import com.hamusuke.jadespigot.view.ViewGroup;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JavaOps;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.IInventoryHolder;
@@ -23,6 +26,21 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Utils {
+    @Nullable
+    public static <A, T> T retrieveFieldFrom(A input, String fieldName, Codec<A> codec, Class<T> retType) {
+        var result = codec.encode(input, JavaOps.INSTANCE, Maps.newHashMap()).result();
+        if (result.isEmpty() || !(result.get() instanceof Map<?, ?> map)) {
+            return null;
+        }
+
+        var o = map.get(fieldName);
+        if (o == null || !o.getClass().isAssignableFrom(retType)) {
+            return null;
+        }
+
+        return retType.cast(o);
+    }
+
     public static <T> Map.Entry<MinecraftKey, List<ViewGroup<T>>> getServerExtensionData(
             Accessor<?> accessor,
             WrappedHierarchyLookup<ServerExtensionProvider<T>> lookup) {

@@ -1,6 +1,5 @@
 package com.hamusuke.jadespigot.network.packet;
 
-import com.hamusuke.jadespigot.JadeRegistry;
 import com.hamusuke.jadespigot.JadeSpigot;
 import com.hamusuke.jadespigot.network.NetworkContext;
 import com.hamusuke.jadespigot.network.handler.DefaultPacketHandler;
@@ -35,7 +34,7 @@ public record ClientHandshakePacket(String protocolVersion) {
                     return;
                 }
 
-                var rsp = new ServerHandshakePacket(Map.of(), List.of(), JadeRegistry.INSTANCE.blockDataProviders.mappedIds(), JadeRegistry.INSTANCE.entityDataProviders.mappedIds());
+                var rsp = new ServerHandshakePacket(Map.of(), List.of(), List.of(), List.of());
                 var packetBuf = new RegistryFriendlyByteBuf(Unpooled.buffer(), JadeSpigot.instance().registryCustom);
                 ServerHandshakePacket.CODEC.encode(packetBuf, rsp);
                 ctx.send(ServerHandshakePacket.PACKET_SERVER_HANDSHAKE, packetBuf);
