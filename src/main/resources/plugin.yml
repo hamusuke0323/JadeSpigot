@@ -1,4 +1,9 @@
 name: JadeSpigot
-version: '1.0.4'
+version: '1.0.5'
 main: com.hamusuke.jadespigot.JadeSpigot
 api-version: '1.21'
+
+commands:
+  jadehandshake:
+    aliases: ["jhs"]
+    description: "resend handshake packet to client"
