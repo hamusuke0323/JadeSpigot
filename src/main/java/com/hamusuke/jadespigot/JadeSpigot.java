@@ -1,5 +1,6 @@
 package com.hamusuke.jadespigot;
 
+import com.hamusuke.jadespigot.addon.StatusEffectsMap;
 import com.hamusuke.jadespigot.network.packet.*;
 import com.hamusuke.jadespigot.network.packet.ClientHandshakePacket.ClientHandshakePacketHandler;
 import com.hamusuke.jadespigot.network.packet.RequestBlockPacket.RequestBlockPacketHandler;
@@ -7,14 +8,13 @@ import com.hamusuke.jadespigot.network.packet.RequestEntityPacket.RequestEntityP
 import net.minecraft.EnumChatFormat;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.network.chat.ChatHoverable;
-import net.minecraft.network.chat.ChatHoverable.EnumHoverAction;
 import net.minecraft.network.chat.ChatModifier;
 import net.minecraft.network.chat.IChatBaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_21_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R5.CraftServer;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +24,9 @@ import java.util.function.UnaryOperator;
 
 public final class JadeSpigot extends JavaPlugin {
     private static JadeSpigot INSTANCE;
-    public static final String JADE_PROTO_VERSION = "7";
+    public static final String JADE_PROTO_VERSION = "8";
     public final IRegistryCustom registryCustom;
+    public final StatusEffectsMap statusEffectsMap = new StatusEffectsMap();
 
     public JadeSpigot() {
         INSTANCE = this;
@@ -44,6 +45,7 @@ public final class JadeSpigot extends JavaPlugin {
     public void onEnable() {
         this.getLogger().info("JadeSpigot enabled!");
 
+        this.getServer().getPluginManager().registerEvents(this.statusEffectsMap, this);
         Objects.requireNonNull(this.getCommand("jadehandshake")).setExecutor(this);
 
         Bukkit.getMessenger().registerIncomingPluginChannel(this, ClientHandshakePacket.PACKET_CLIENT_HANDSHAKE, ClientHandshakePacketHandler.INSTANCE);
@@ -81,11 +83,11 @@ public final class JadeSpigot extends JavaPlugin {
                 .b(IChatBaseComponent
                         .b("handshake packet")
                         .a((UnaryOperator<ChatModifier>) chatModifier -> chatModifier
-                                .a(new ChatHoverable(EnumHoverAction.a, IChatBaseComponent
+                                .a(new ChatHoverable.e(IChatBaseComponent
                                         .b("byte: " + Arrays.toString(ServerHandshakePacket.RESPONSE))))))
                 .b(IChatBaseComponent
                         .b(" to "))
-                .b(nms.p_())
+                .b(nms.Q_())
         );
 
         return true;

@@ -15,12 +15,12 @@ public enum RedstoneProvider implements ServerDataProvider<BlockAccessor> {
 
     @Override
     public void appendServerData(NBTTagCompound data, BlockAccessor accessor) {
-        var blockEntity = accessor.getBlockEntity();
+        final var blockEntity = accessor.getBlockEntity();
         if (blockEntity instanceof TileEntityComparator comparator) {
-            data.a("Signal", comparator.b());
+            data.a("Signal", comparator.a());
         } else if (blockEntity instanceof CalibratedSculkSensorBlockEntity) {
-            var direction = accessor.getBlockState().c(CalibratedSculkSensorBlock.b).g();
-            int signal = accessor.getLevel().c(accessor.getPosition().a(direction), direction);
+            final var direction = accessor.getBlockState().c(CalibratedSculkSensorBlock.b).g();
+            final int signal = accessor.getLevel().c(accessor.getPosition().a(direction), direction);
             data.a("Signal", signal);
         }
     }

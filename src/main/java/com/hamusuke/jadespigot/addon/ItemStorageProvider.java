@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.TileEntityContainer;
 import net.minecraft.world.level.block.entity.TileEntityEnderChest;
 import net.minecraft.world.level.block.entity.TileEntityFurnace;
 import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftInventory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,40 +31,26 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public abstract class ItemStorageProvider<T extends Accessor<?>> implements ServerDataProvider<T> {
+public class ItemStorageProvider<T extends Accessor<?>> implements ServerDataProvider<T> {
     public static final Cache<Object, ItemCollector<?>> targetCache = CacheBuilder.newBuilder().weakKeys().expireAfterAccess(
             60,
             TimeUnit.SECONDS).build();
     private static final StreamCodec<RegistryFriendlyByteBuf, Entry<MinecraftKey, List<ViewGroup<ItemStack>>>> STREAM_CODEC = ViewGroup.listCodec(
-            ItemStack.g);
+            ItemStack.h);
 
     public static final MinecraftKey UNIVERSAL_ITEM_STORAGE = MinecraftKey.b("item_storage");
-
-    public static ForBlock getBlock() {
-        return ForBlock.INSTANCE;
-    }
-
-    public static ForEntity getEntity() {
-        return ForEntity.INSTANCE;
-    }
-
-    public static class ForBlock extends ItemStorageProvider<BlockAccessor> {
-        private static final ForBlock INSTANCE = new ForBlock();
-    }
-
-    public static class ForEntity extends ItemStorageProvider<EntityAccessor> {
-        private static final ForEntity INSTANCE = new ForEntity();
-    }
+    public static final ItemStorageProvider<BlockAccessor> BLOCK = new ItemStorageProvider<>();
+    public static final ItemStorageProvider<EntityAccessor> ENTITY = new ItemStorageProvider<>();
 
     public static void putData(Accessor<?> accessor) {
-        var tag = accessor.getServerData();
-        var target = accessor.getTarget();
-        var player = accessor.getPlayer();
-        var entry = Utils.getServerExtensionData(accessor, JadeRegistry.INSTANCE.itemStorageProviders);
+        final var tag = accessor.getServerData();
+        final var target = accessor.getTarget();
+        final var player = accessor.getPlayer();
+        final var entry = Utils.getServerExtensionData(accessor, JadeRegistry.INSTANCE.itemStorageProviders);
 
         if (entry != null) {
-            var groups = entry.getValue();
-            for (var group : groups) {
+            final var groups = entry.getValue();
+            for (final var group : groups) {
                 if (group.views.size() > ItemCollector.MAX_SIZE) {
                     group.views = group.views.subList(0, ItemCollector.MAX_SIZE);
                 }
@@ -75,6 +61,8 @@ public abstract class ItemStorageProvider<T extends Accessor<?>> implements Serv
         }
 
         if (target instanceof RandomizableContainer containerEntity && containerEntity.aw_() != null) {
+            tag.a("Loot", true);
+        } else if (target instanceof ContainerEntity containerEntity && containerEntity.q() != null) {
             tag.a("Loot", true);
         } else if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR && target instanceof TileEntityContainer te) {
             if (te.d != ChestLock.a) {
@@ -119,7 +107,7 @@ public abstract class ItemStorageProvider<T extends Accessor<?>> implements Serv
                 case RandomizableContainer te when te.aw_() != null -> {
                     return null;
                 }
-                case ContainerEntity containerEntity when containerEntity.v() != null -> {
+                case ContainerEntity containerEntity when containerEntity.q() != null -> {
                     return null;
                 }
                 default -> {

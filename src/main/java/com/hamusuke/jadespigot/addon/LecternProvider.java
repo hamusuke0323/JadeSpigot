@@ -15,12 +15,12 @@ public enum LecternProvider implements StreamServerDataProvider<BlockAccessor, I
 
     @Override
     public ItemStack streamData(BlockAccessor accessor) {
-        return ((TileEntityLectern) accessor.getBlockEntity()).b();
+        return ((TileEntityLectern) accessor.getBlockEntity()).c();
     }
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, ItemStack> streamCodec() {
-        return ItemStack.g;
+        return ItemStack.h;
     }
 
     @Override

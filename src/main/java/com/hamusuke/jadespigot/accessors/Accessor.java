@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

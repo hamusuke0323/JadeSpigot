@@ -1,6 +1,5 @@
 package com.hamusuke.jadespigot;
 
-import com.google.common.collect.Maps;
 import com.hamusuke.jadespigot.accessors.Accessor;
 import com.hamusuke.jadespigot.accessors.BlockAccessor;
 import com.hamusuke.jadespigot.addon.ItemCollector;
@@ -8,8 +7,6 @@ import com.hamusuke.jadespigot.addon.ItemIterator;
 import com.hamusuke.jadespigot.impl.lookup.WrappedHierarchyLookup;
 import com.hamusuke.jadespigot.view.ServerExtensionProvider;
 import com.hamusuke.jadespigot.view.ViewGroup;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JavaOps;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.IInventoryHolder;
@@ -26,19 +23,15 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Utils {
-    @Nullable
-    public static <A, T> T retrieveFieldFrom(A input, String fieldName, Codec<A> codec, Class<T> retType) {
-        var result = codec.encode(input, JavaOps.INSTANCE, Maps.newHashMap()).result();
-        if (result.isEmpty() || !(result.get() instanceof Map<?, ?> map)) {
-            return null;
+    public static <T> T retrieveFieldValue(final String fieldName, final Object object, final T defaultValue) {
+        try {
+            final var f = object.getClass().getField(fieldName);
+            f.setAccessible(true);
+            return (T) f.get(object);
+        } catch (Throwable e) {
+            JadeSpigot.instance().getLogger().warning(e.toString());
+            return defaultValue;
         }
-
-        var o = map.get(fieldName);
-        if (o == null || !o.getClass().isAssignableFrom(retType)) {
-            return null;
-        }
-
-        return retType.cast(o);
     }
 
     public static <T> Map.Entry<MinecraftKey, List<ViewGroup<T>>> getServerExtensionData(
@@ -65,7 +58,7 @@ public class Utils {
             return new ItemCollector<>(new ItemIterator.ContainerItemIterator(
                     o -> {
                         if (o instanceof EntityHorseAbstract horse) {
-                            return horse.ct;
+                            return horse.cB;
                         }
 
                         return null;
@@ -84,7 +77,7 @@ public class Utils {
                                             be.m(),
                                             Objects.requireNonNull(be.i()),
                                             be.aA_(),
-                                            false);
+                                            true);
                                     if (compound != null) {
                                         return compound;
                                     }
@@ -130,7 +123,7 @@ public class Utils {
         }
 
         if (parent instanceof EntityEnderDragon dragon) {
-            EntityComplexPart[] parts = dragon.x();
+            EntityComplexPart[] parts = dragon.t();
             if (index < parts.length) {
                 return parts[index];
             }

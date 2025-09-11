@@ -34,22 +34,22 @@ public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity>
     }
 
     public static void handleRequest(RequestEntityPacket message, NetworkContext context, Consumer<NBTTagCompound> responseSender) {
-        var player = context.getPlayer();
+        final var player = context.getPlayer();
         context.execute(() -> {
-            var accessor = message.data().unpack(player);
+            final var accessor = message.data().unpack(player);
             if (accessor == null) {
                 return;
             }
 
-            var entity = accessor.getEntity();
-            double maxDistance = MathHelper.k(player.gM() + 21);
+            final var entity = accessor.getEntity();
+            final double maxDistance = MathHelper.k(player.gW() + 21);
             if (entity == null || player.g(entity) > maxDistance) {
                 return;
             }
 
-            List<ServerDataProvider<EntityAccessor>> providers = JadeRegistry.INSTANCE.getEntityNBTProviders(entity);
-            var tag = accessor.getServerData();
-            for (var provider : providers) {
+            final var providers = JadeRegistry.INSTANCE.getEntityNBTProviders(entity);
+            final var tag = accessor.getServerData();
+            for (final var provider : providers) {
                 try {
                     provider.appendServerData(tag, accessor);
                 } catch (Exception e) {
@@ -129,15 +129,15 @@ public class EntityAccessorImpl extends AccessorImpl<MovingObjectPositionEntity>
                 SyncData::id,
                 ByteBufCodecs.h,
                 SyncData::partIndex,
-                ByteBufCodecs.u.a(Vec3D::new, Vec3D::k),
+                ByteBufCodecs.v.a(Vec3D::new, Vec3D::l),
                 SyncData::hitVec,
                 SyncData::new
         );
 
         public EntityAccessor unpack(EntityPlayer player) {
-            Supplier<Entity> entity = Suppliers.memoize(() -> Utils.getPartEntity(player.dV().a(this.id), this.partIndex));
+            Supplier<Entity> entity = Suppliers.memoize(() -> Utils.getPartEntity(player.y().a(this.id), this.partIndex));
             return new EntityAccessorImpl.Builder()
-                    .level(player.dV())
+                    .level(player.y())
                     .player(player.getBukkitEntity().getPlayer())
                     .showDetails(this.showDetails)
                     .entity(entity)

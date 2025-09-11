@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.List;
 import java.util.Locale;
@@ -17,16 +18,20 @@ import java.util.function.Predicate;
 public class ItemCollector<T> {
     public static final int MAX_SIZE = 54;
     public static final ItemCollector<?> EMPTY = new ItemCollector<>(null);
-    private static final Predicate<ItemStack> NON_EMPTY = stack -> {
+    private static final Predicate<ItemStack> SHOWN = stack -> {
         if (stack.f()) {
             return false;
         }
 
-        if (stack.b(DataComponents.p)) {
-            var customData = stack.a(DataComponents.b, CustomData.a);
-            var tag = customData.e();
-            for (var key : tag.e()) {
-                if (key.toLowerCase(Locale.ENGLISH).endsWith("clear") && tag.b(key)) {
+        if (stack.a(DataComponents.q, TooltipDisplay.c).a()) {
+            return false;
+        }
+
+        if (stack.d(DataComponents.p)) {
+            final var customData = stack.a(DataComponents.b, CustomData.a);
+            final var tag = customData.e();
+            for (final var key : tag.e()) {
+                if (key.toLowerCase(Locale.ENGLISH).endsWith("clear") && tag.b(key, true)) {
                     return false;
                 }
             }
@@ -54,12 +59,12 @@ public class ItemCollector<T> {
             return null;
         }
         long currentVersion = iterator.getVersion(container);
-        long gameTime = accessor.getLevel().ad();
+        long gameTime = System.currentTimeMillis();
         if (mergedResult != null && iterator.isFinished()) {
             if (version == currentVersion) {
                 return mergedResult; // content not changed
             }
-            if (lastTimeFinished + 5 > gameTime) {
+            if (lastTimeFinished + 250 > gameTime) {
                 return mergedResult; // avoid update too frequently
             }
             iterator.reset();
@@ -67,7 +72,7 @@ public class ItemCollector<T> {
         AtomicInteger count = new AtomicInteger();
         iterator.populate(container, MAX_SIZE * 2).forEach(stack -> {
             count.incrementAndGet();
-            if (NON_EMPTY.test(stack)) {
+            if (SHOWN.test(stack)) {
                 ItemDefinition def = new ItemDefinition(stack);
                 items.addTo(def, stack.M());
             }

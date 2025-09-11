@@ -22,7 +22,7 @@ public enum JukeboxProvider implements StreamServerDataProvider<BlockAccessor, I
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, ItemStack> streamCodec() {
-        return ItemStack.g;
+        return ItemStack.h;
     }
 
     @Override

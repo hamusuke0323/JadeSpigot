@@ -16,7 +16,7 @@ public enum ZombieVillagerProvider implements StreamServerDataProvider<EntityAcc
 
     @Override
     public @Nullable Integer streamData(EntityAccessor accessor) {
-        int time = ((EntityZombieVillager) accessor.getEntity()).cf;
+        final int time = ((EntityZombieVillager) accessor.getEntity()).cq;
         return time > 0 ? time : null;
     }
 

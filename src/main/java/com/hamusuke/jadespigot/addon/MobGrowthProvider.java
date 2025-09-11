@@ -21,9 +21,9 @@ public enum MobGrowthProvider implements StreamServerDataProvider<EntityAccessor
         int time = -1;
         Entity entity = accessor.getEntity();
         if (entity instanceof EntityAgeable ageable) {
-            time = -ageable.Y_();
+            time = -ageable.Z_();
         } else if (entity instanceof Tadpole tadpole) {
-            time = Math.max(0, Tadpole.a - tadpole.ca);
+            time = Math.max(0, Tadpole.a - tadpole.cl);
         }
         return time > 0 ? time : null;
     }

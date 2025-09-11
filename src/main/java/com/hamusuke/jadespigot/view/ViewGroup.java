@@ -16,9 +16,9 @@ public class ViewGroup<T> {
         return StreamCodec.a(
                 ByteBufCodecs.<B, T>a().apply(viewCodec),
                 $ -> $.views,
-                ByteBufCodecs.a(ByteBufCodecs.o),
+                ByteBufCodecs.a(ByteBufCodecs.p),
                 $ -> Optional.ofNullable($.id),
-                ByteBufCodecs.a(ByteBufCodecs.r),
+                ByteBufCodecs.a(ByteBufCodecs.s),
                 $ -> Optional.ofNullable($.extraData),
                 ViewGroup::new);
     }

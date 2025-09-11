@@ -31,8 +31,8 @@ public enum CampfireProvider implements ServerExtensionProvider<ItemStack> {
     public @Nullable List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor) {
         if (accessor.getTarget() instanceof TileEntityCampfire campfire) {
             List<ItemStack> list = Lists.newArrayList();
-            for (int i = 0; i < campfire.e.length; i++) {
-                ItemStack stack = campfire.b().get(i);
+            for (int i = 0; i < campfire.f.length; i++) {
+                ItemStack stack = campfire.c().get(i);
                 if (stack.f()) {
                     continue;
                 }
@@ -41,7 +41,7 @@ public enum CampfireProvider implements ServerExtensionProvider<ItemStack> {
                 CustomData customData = stack.a(DataComponents.b, CustomData.a).a(
                         DynamicOpsNBT.a,
                         COOKING_TIME_CODEC,
-                        campfire.e[i] - campfire.d[i]).getOrThrow();
+                        campfire.f[i] - campfire.e[i]).getOrThrow();
                 stack.b(DataComponents.b, customData);
                 list.add(stack);
             }

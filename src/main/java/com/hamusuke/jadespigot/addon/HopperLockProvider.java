@@ -15,7 +15,7 @@ public enum HopperLockProvider implements StreamServerDataProvider<BlockAccessor
 
     @Override
     public Boolean streamData(BlockAccessor accessor) {
-        return !accessor.getBlockState().c(BlockProperties.j);
+        return !accessor.getBlockState().c(BlockProperties.i);
     }
 
     @Override

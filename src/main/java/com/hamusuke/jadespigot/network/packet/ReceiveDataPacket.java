@@ -15,7 +15,7 @@ public record ReceiveDataPacket(NBTTagCompound tag) {
     public static final int MAX_SIZE = 16 * 1024;
     public static final String PACKET_RECEIVE_DATA = "jade:receive_data";
     public static final StreamCodec<PacketDataSerializer, ReceiveDataPacket> CODEC = StreamCodec.a(
-            ByteBufCodecs.r,
+            ByteBufCodecs.s,
             ReceiveDataPacket::tag,
             ReceiveDataPacket::new
     );
@@ -46,9 +46,9 @@ public record ReceiveDataPacket(NBTTagCompound tag) {
         int largestSize = 0;
         String largestKey = null;
         NBTBase largestValue = null;
-        for (var key : tag.e()) {
-            var childTag = Objects.requireNonNull(tag.c(key));
-            int size = childTag.a();
+        for (final var key : tag.e()) {
+            final var childTag = Objects.requireNonNull(tag.a(key));
+            final int size = childTag.a();
             if (size > largestSize) {
                 largestSize = size;
                 largestKey = key;

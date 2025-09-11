@@ -16,13 +16,13 @@ public enum PetArmorProvider implements StreamServerDataProvider<EntityAccessor,
 
     @Override
     public @Nullable ItemStack streamData(EntityAccessor accessor) {
-        var armor = ((EntityInsentient) accessor.getEntity()).ak();
+        final var armor = ((EntityInsentient) accessor.getEntity()).gl();
         return armor.f() ? null : armor;
     }
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, ItemStack> streamCodec() {
-        return ItemStack.g;
+        return ItemStack.h;
     }
 
     @Override

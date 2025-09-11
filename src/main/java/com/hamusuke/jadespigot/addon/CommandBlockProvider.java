@@ -17,10 +17,11 @@ public enum CommandBlockProvider implements StreamServerDataProvider<BlockAccess
     @Override
     @Nullable
     public String streamData(BlockAccessor accessor) {
-        if (!accessor.getNMSPlayer().gG()) {
+        if (!accessor.getNMSPlayer().gQ()) {
             return null;
         }
-        String command = ((TileEntityCommand) accessor.getBlockEntity()).b().m();
+
+        String command = ((TileEntityCommand) accessor.getBlockEntity()).a().m();
         if (command.length() > 40) {
             command = command.substring(0, 37) + "...";
         }
@@ -30,7 +31,7 @@ public enum CommandBlockProvider implements StreamServerDataProvider<BlockAccess
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, String> streamCodec() {
-        return ByteBufCodecs.o.a();
+        return ByteBufCodecs.p.a();
     }
 
     @Override

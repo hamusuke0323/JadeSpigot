@@ -20,11 +20,11 @@ public enum MobBreedingProvider implements StreamServerDataProvider<EntityAccess
         int time = 0;
         var entity = accessor.getEntity();
         if (entity instanceof Allay allay) {
-            if (allay.cn > 0 && allay.cn < Integer.MAX_VALUE) {
-                time = (int) allay.cn;
+            if (allay.cy > 0 && allay.cy < Integer.MAX_VALUE) {
+                time = (int) allay.cy;
             }
         } else {
-            time = ((EntityAnimal) entity).Y_();
+            time = ((EntityAnimal) entity).Z_();
         }
 
         return time > 0 ? time : null;

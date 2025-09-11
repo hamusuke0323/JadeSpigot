@@ -18,7 +18,7 @@ public enum BrewingStandProvider implements StreamServerDataProvider<BlockAccess
     @Override
     public Data streamData(BlockAccessor accessor) {
         var brewingStand = (TileEntityBrewingStand) accessor.getBlockEntity();
-        return new Data(brewingStand.s, brewingStand.m);
+        return new Data(brewingStand.u, brewingStand.r);
     }
 
     @Override

@@ -27,7 +27,7 @@ public abstract class AccessorImpl<T extends MovingObjectPosition> implements Ac
         this.level = level;
         this.player = player;
         this.hit = hit;
-        this.serverData = serverData == null ? new NBTTagCompound() : serverData.i();
+        this.serverData = serverData == null ? new NBTTagCompound() : serverData.l();
     }
 
     @Override

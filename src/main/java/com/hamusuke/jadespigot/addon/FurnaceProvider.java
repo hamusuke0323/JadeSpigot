@@ -21,8 +21,8 @@ public enum FurnaceProvider implements StreamServerDataProvider<BlockAccessor, D
     public Data streamData(BlockAccessor accessor) {
         var furnace = (TileEntityFurnace) accessor.getBlockEntity();
         return new Data(
-                furnace.v,
-                furnace.w,
+                furnace.A,
+                furnace.B,
                 List.of(furnace.a(0), furnace.a(1), furnace.a(2)));
     }
 
@@ -42,7 +42,7 @@ public enum FurnaceProvider implements StreamServerDataProvider<BlockAccessor, D
                 Data::progress,
                 ByteBufCodecs.h,
                 Data::total,
-                ItemStack.i,
+                ItemStack.k,
                 Data::inventory,
                 Data::new);
     }

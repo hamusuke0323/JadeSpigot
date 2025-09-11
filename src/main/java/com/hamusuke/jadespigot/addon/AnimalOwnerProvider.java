@@ -21,7 +21,7 @@ public enum AnimalOwnerProvider implements StreamServerDataProvider<EntityAccess
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, String> streamCodec() {
-        return ByteBufCodecs.o.a();
+        return ByteBufCodecs.p.a();
     }
 
     @Override

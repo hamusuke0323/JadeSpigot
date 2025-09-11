@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public record ClientHandshakePacket(String protocolVersion) {
     public static final String PACKET_CLIENT_HANDSHAKE = "jade:client_handshake";
     public static final StreamCodec<PacketDataSerializer, ClientHandshakePacket> CODEC = StreamCodec
-            .a(ByteBufCodecs.o, ClientHandshakePacket::protocolVersion, ClientHandshakePacket::new);
+            .a(ByteBufCodecs.p, ClientHandshakePacket::protocolVersion, ClientHandshakePacket::new);
 
     public enum ClientHandshakePacketHandler implements DefaultPacketHandler {
         INSTANCE;

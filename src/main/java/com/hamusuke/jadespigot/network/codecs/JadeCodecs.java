@@ -19,7 +19,7 @@ public class JadeCodecs {
             } else if (b == 3) {
                 return ByteBufCodecs.l.decode(buf);
             } else if (b == 4) {
-                return ByteBufCodecs.o.decode(buf);
+                return ByteBufCodecs.p.decode(buf);
             } else if (b > 20) {
                 return b - 20;
             }
@@ -45,11 +45,11 @@ public class JadeCodecs {
                 }
                 case String s -> {
                     buf.writeByte(4);
-                    ByteBufCodecs.o.encode(buf, s);
+                    ByteBufCodecs.p.encode(buf, s);
                 }
                 case Enum<?> anEnum -> {
                     buf.writeByte(4);
-                    ByteBufCodecs.o.encode(buf, anEnum.name());
+                    ByteBufCodecs.p.encode(buf, anEnum.name());
                 }
                 case null -> throw new NullPointerException();
                 default ->

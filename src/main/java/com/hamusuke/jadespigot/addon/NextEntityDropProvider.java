@@ -1,5 +1,6 @@
 package com.hamusuke.jadespigot.addon;
 
+import com.hamusuke.jadespigot.Utils;
 import com.hamusuke.jadespigot.accessors.EntityAccessor;
 import com.hamusuke.jadespigot.providers.ServerDataProvider;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,17 +17,15 @@ public enum NextEntityDropProvider implements ServerDataProvider<EntityAccessor>
     public void appendServerData(NBTTagCompound tag, EntityAccessor accessor) {
         int max = 24000 * 2;
         if (accessor.getEntity() instanceof EntityChicken chicken) {
-            if (!chicken.e_() && chicken.ce < max) {
-                tag.a("NextEggIn", chicken.ce);
+            if (!chicken.g_() && chicken.cq < max) {
+                tag.a("NextEggIn", chicken.cq);
             }
         } else if (accessor.getEntity() instanceof Armadillo armadillo) {
-            if (armadillo.e_()) {
+            if (!armadillo.g_()) {
                 return;
             }
 
-            var compound = new NBTTagCompound();
-            armadillo.b(compound);
-            var scuteTime = compound.h("scute_time");
+            final int scuteTime = Utils.retrieveFieldValue("cv", armadillo, -1);
             if (scuteTime < max) {
                 tag.a("NextScuteIn", scuteTime);
             }

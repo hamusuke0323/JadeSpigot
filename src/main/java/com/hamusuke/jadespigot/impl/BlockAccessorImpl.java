@@ -6,7 +6,6 @@ import com.hamusuke.jadespigot.JadeSpigot;
 import com.hamusuke.jadespigot.accessors.BlockAccessor;
 import com.hamusuke.jadespigot.network.NetworkContext;
 import com.hamusuke.jadespigot.network.packet.RequestBlockPacket;
-import com.hamusuke.jadespigot.providers.ServerDataProvider;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +25,6 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -42,23 +40,23 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
     }
 
     public static void handleRequest(RequestBlockPacket message, NetworkContext context, Consumer<NBTTagCompound> responseSender) {
-        var player = context.getPlayer();
+        final var player = context.getPlayer();
         context.execute(() -> {
-            var accessor = message.data().unpack(player);
+            final var accessor = message.data().unpack(player);
             if (accessor == null) {
                 return;
             }
 
-            var pos = accessor.getPosition();
-            var world = player.y();
-            double maxDistance = MathHelper.k(player.gL() + 21);
-            if (pos.j(player.dv()) > maxDistance || !world.p(pos)) {
+            final var pos = accessor.getPosition();
+            final var world = player.y();
+            final double maxDistance = MathHelper.k(player.gV() + 21);
+            if (pos.j(player.dx()) > maxDistance || !world.p(pos)) {
                 return;
             }
 
-            List<ServerDataProvider<BlockAccessor>> providers = JadeRegistry.INSTANCE.getBlockNBTProviders(accessor.getBlock(), accessor.getBlockEntity());
-            var tag = accessor.getServerData();
-            for (var provider : providers) {
+            final var providers = JadeRegistry.INSTANCE.getBlockNBTProviders(accessor.getBlock(), accessor.getBlockEntity());
+            final var tag = accessor.getServerData();
+            for (final var provider : providers) {
                 try {
                     provider.appendServerData(tag, accessor);
                 } catch (Exception e) {
@@ -160,9 +158,9 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
                 SyncData::showDetails,
                 StreamCodec.a((StreamEncoder<RegistryFriendlyByteBuf, MovingObjectPositionBlock>) (o, movingObjectPositionBlock) -> o.a(movingObjectPositionBlock), RegistryFriendlyByteBuf::v),
                 SyncData::hit,
-                ByteBufCodecs.a(Block.q),
+                ByteBufCodecs.a(Block.k),
                 SyncData::blockState,
-                ItemStack.g,
+                ItemStack.h,
                 SyncData::fakeBlock,
                 SyncData::new
         );
@@ -170,11 +168,11 @@ public class BlockAccessorImpl extends AccessorImpl<MovingObjectPositionBlock> i
         public BlockAccessor unpack(EntityPlayer player) {
             Supplier<TileEntity> blockEntity = null;
             if (this.blockState.x()) {
-                blockEntity = Suppliers.memoize(() -> player.dV().c_(hit.b()));
+                blockEntity = Suppliers.memoize(() -> player.ai().c_(hit.b()));
             }
 
             return new Builder()
-                    .level(player.dV())
+                    .level(player.y())
                     .player(player.getBukkitEntity().getPlayer())
                     .showDetails(showDetails)
                     .hit(hit)

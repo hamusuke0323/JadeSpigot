@@ -26,7 +26,7 @@ public enum ChiseledBookshelfProvider implements StreamServerDataProvider<BlockA
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, ItemStack> streamCodec() {
-        return ItemStack.g;
+        return ItemStack.h;
     }
 
     @Override
