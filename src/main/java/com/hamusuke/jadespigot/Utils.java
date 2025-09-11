@@ -23,17 +23,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Utils {
-    public static <T> T retrieveFieldValue(final String fieldName, final Object object, final T defaultValue) {
-        try {
-            final var f = object.getClass().getField(fieldName);
-            f.setAccessible(true);
-            return (T) f.get(object);
-        } catch (Throwable e) {
-            JadeSpigot.instance().getLogger().warning(e.toString());
-            return defaultValue;
-        }
-    }
-
     public static <T> Map.Entry<MinecraftKey, List<ViewGroup<T>>> getServerExtensionData(
             Accessor<?> accessor,
             WrappedHierarchyLookup<ServerExtensionProvider<T>> lookup) {

@@ -52,7 +52,7 @@ public enum JadeRegistry {
     }
 
     public void registerAllBlockDataProviders() {
-        this.registerBlockDataProvider(ItemStorageProvider.getBlock(), Block.class);
+        this.registerBlockDataProvider(ItemStorageProvider.BLOCK, Block.class);
 
         this.registerBlockDataProvider(BrewingStandProvider.INSTANCE, BlockBrewingStand.class);
         this.registerBlockDataProvider(BeehiveProvider.INSTANCE, BlockBeehive.class);
@@ -68,7 +68,7 @@ public enum JadeRegistry {
     }
 
     public void registerAllEntityDataProviders() {
-        this.registerEntityDataProvider(ItemStorageProvider.getEntity(), Entity.class);
+        this.registerEntityDataProvider(ItemStorageProvider.ENTITY, Entity.class);
 
         this.registerEntityDataProvider(AnimalOwnerProvider.INSTANCE, Entity.class);
         this.registerEntityDataProvider(StatusEffectsProvider.INSTANCE, EntityLiving.class);

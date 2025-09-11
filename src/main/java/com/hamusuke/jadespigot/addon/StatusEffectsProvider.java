@@ -38,7 +38,7 @@ public enum StatusEffectsProvider implements StreamServerDataProvider<EntityAcce
         return MC_POTION_EFFECTS;
     }
 
-    public record Effect(MobEffect effect, long updateTime, long addTime) implements Comparable<Effect> {
+    public record Effect(MobEffect effect, long updateTime, long addTime) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Effect> STREAM_CODEC = StreamCodec.a(
                 MobEffect.e,
                 Effect::effect,
@@ -47,14 +47,5 @@ public enum StatusEffectsProvider implements StreamServerDataProvider<EntityAcce
                 ByteBufCodecs.j,
                 Effect::addTime,
                 Effect::new);
-
-        @Override
-        public int compareTo(Effect o) {
-            int compared = Long.compare(updateTime, o.updateTime);
-            if (compared != 0) {
-                return -compared;
-            }
-            return effect.compareTo(o.effect);
-        }
     }
 }
